@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import CenterContainer from '../components/CenterContainer'
 import { useState } from 'react'
+import { useAuth } from '../contexts/AuthContext'
 
 const loginSchema = yup.object({
 	email: yup.string().email().required(),
@@ -20,22 +21,50 @@ const Admin = () => {
 	} = useForm({
 		resolver: yupResolver(loginSchema),
 	})
+	const { login } = useAuth()
 	const [isLoading, setIsLoading] = useState(false)
 	const [errorMessage, setErrorMessage] = useState()
-	const onSubmit = (data) => console.log(data)
+
+	const handleOnChange = () => {
+		clearErrors()
+		setErrorMessage(null)
+	}
+
+	const onSubmit = async (form) => {
+		console.log('submit')
+		try {
+			setIsLoading(true)
+			await login(form.email, form.password)
+		} catch (error) {
+			setIsLoading(false)
+			setErrorMessage(firebaseAuthErrorMessages(error.code))
+		}
+	}
+
+	function firebaseAuthErrorMessages(errorCode) {
+		switch (errorCode) {
+			case 'auth/user-not-found':
+				return "Couldn't find user"
+			case 'auth/wrong-password':
+				return 'Password is wrong'
+			default:
+				return 'Something went wrong'
+		}
+	}
+
 	return (
 		<CenterContainer>
 			<Paper
 				variant='outlined'
-				sx={{ p: { xs: 3, sm: 5 }, width: 'clamp(300px, 50vw, 500px)' }}
+				sx={{ p: { xs: 4 }, width: 'clamp(300px, 50vw, 450px)' }}
 			>
-				<Typography variant='h4' component={'h1'} mb={2}>
+				<Typography variant='h5' component={'h1'} mb={2}>
 					Login
 				</Typography>
 				<Box
 					component={'form'}
-					onSubmit={handleSubmit(onSubmit)}
-					sx={{ display: 'grid', gap: '2rem' }}
+					// onSubmit={handleSubmit(onSubmit)}
+					sx={{ display: 'grid', gap: '1.5rem' }}
 				>
 					<TextField
 						label='Email *'
@@ -44,25 +73,26 @@ const Admin = () => {
 						{...register('email')}
 						error={errors?.email ? true : false}
 						helperText={errors?.email && errors.email?.message}
-						onChange={() => clearErrors()}
+						onChange={handleOnChange}
 					/>
 
 					<TextField
 						label='Password *'
 						variant='standard'
 						fullWidth
+						type='password'
 						{...register('password')}
 						error={errors?.password ? true : false}
 						helperText={errors?.password && errors.password?.message}
-						onChange={() => clearErrors()}
+						onChange={handleOnChange}
 					/>
 					{errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
 					<LoadingButton
 						loading={isLoading}
-						type='submit'
+						onClick={handleSubmit(onSubmit)}
 						variant={'contained'}
 						size={'large'}
-						sx={{ justifySelf: 'end' }}
+						sx={{ justifySelf: 'end', mt: 1 }}
 					>
 						Login
 					</LoadingButton>
