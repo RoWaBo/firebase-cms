@@ -3,9 +3,10 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import CenterContainer from '../components/CenterContainer'
+import CenterContainer from '../../components/CenterContainer'
 import { useState } from 'react'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthContext'
+import { useRouter } from 'next/router'
 
 const loginSchema = yup.object({
 	email: yup.string().email().required(),
@@ -22,6 +23,7 @@ const Admin = () => {
 		resolver: yupResolver(loginSchema),
 	})
 	const { login } = useAuth()
+	const router = useRouter()
 	const [isLoading, setIsLoading] = useState(false)
 	const [errorMessage, setErrorMessage] = useState()
 
@@ -30,18 +32,7 @@ const Admin = () => {
 		setErrorMessage(null)
 	}
 
-	const onSubmit = async (form) => {
-		console.log('submit')
-		try {
-			setIsLoading(true)
-			await login(form.email, form.password)
-		} catch (error) {
-			setIsLoading(false)
-			setErrorMessage(firebaseAuthErrorMessages(error.code))
-		}
-	}
-
-	function firebaseAuthErrorMessages(errorCode) {
+	const firebaseAuthErrorMessages = (errorCode) => {
 		switch (errorCode) {
 			case 'auth/user-not-found':
 				return "Couldn't find user"
@@ -49,6 +40,17 @@ const Admin = () => {
 				return 'Password is wrong'
 			default:
 				return 'Something went wrong'
+		}
+	}
+
+	const onSubmit = async (form) => {
+		try {
+			setIsLoading(true)
+			await login(form.email, form.password)
+			router.push('admin/dashboard')
+		} catch (error) {
+			setIsLoading(false)
+			setErrorMessage(firebaseAuthErrorMessages(error.code))
 		}
 	}
 
