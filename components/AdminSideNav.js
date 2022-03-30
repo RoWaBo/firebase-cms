@@ -42,7 +42,11 @@ const AdminSideNav = ({ heading, navItems }) => {
 			<List>
 				{navItems.map(({ text, icon }, i) => (
 					<ListItem key={i} disablePadding>
-						<ListItemButton>
+						<ListItemButton
+							onClick={() =>
+								router.push(`${router.route}?collection=${text}`)
+							}
+						>
 							<ListItemIcon>{icon}</ListItemIcon>
 							<ListItemText
 								primary={text}
