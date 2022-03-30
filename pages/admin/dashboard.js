@@ -1,7 +1,17 @@
-import { Backdrop, CircularProgress, Typography } from '@mui/material'
+import { Backdrop, CircularProgress } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useRouter } from 'next/router'
+import BookIcon from '@mui/icons-material/Book'
+import CodeIcon from '@mui/icons-material/Code'
+import SettingsIcon from '@mui/icons-material/Settings'
+import AdminSideNav from '../../components/AdminSideNav'
+
+const navItems = [
+	{ text: 'blogs', icon: <BookIcon /> },
+	{ text: 'code snippets', icon: <CodeIcon /> },
+	{ text: 'settings', icon: <SettingsIcon /> },
+]
 
 const Dashboard = () => {
 	const { currentUser } = useAuth()
@@ -18,11 +28,7 @@ const Dashboard = () => {
 	}, [])
 
 	if (!isLoading)
-		return (
-			<Typography variant='h4' component='h1'>
-				Dashboard
-			</Typography>
-		)
+		return <AdminSideNav heading='Content Collection' navItems={navItems} />
 	if (isLoading)
 		return (
 			<Backdrop open>
