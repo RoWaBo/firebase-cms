@@ -8,9 +8,9 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import AdminSideNav from '../../../components/AdminSideNav'
 
 const navItems = [
-	{ text: 'blogs', icon: <BookIcon /> },
-	{ text: 'code snippets', icon: <CodeIcon /> },
-	{ text: 'settings', icon: <SettingsIcon /> },
+	{ collectionName: 'blogs', icon: <BookIcon /> },
+	{ collectionName: 'code snippets', icon: <CodeIcon /> },
+	{ collectionName: 'settings', icon: <SettingsIcon /> },
 ]
 
 const Dashboard = () => {

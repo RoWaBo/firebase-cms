@@ -12,14 +12,26 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout'
 import { useAuth } from '../contexts/AuthContext'
 import { useRouter } from 'next/router'
+import { blue } from '@mui/material/colors'
 
 const AdminSideNav = ({ heading, navItems }) => {
 	const { logout } = useAuth()
 	const router = useRouter()
 
-	const handleLogout = () => {
+	const handleLogoutBtnClick = () => {
 		logout()
 		router.push('/admin')
+	}
+
+	const handleListItemBtnClick = (collectionName) => {
+		router.push(`${router.route}?collection=${collectionName}`)
+	}
+
+	const listItemBtnIsSelected = (itemCollectionName) => {
+		return itemCollectionName === router.query.collection ? true : false
+	}
+	const listItemBtnIsSelectedStyle = (itemCollectionName) => {
+		return itemCollectionName === router.query.collection ? { color: blue[800] } : {}
 	}
 
 	return (
@@ -40,16 +52,18 @@ const AdminSideNav = ({ heading, navItems }) => {
 			</Typography>
 			<Divider />
 			<List>
-				{navItems.map(({ text, icon }, i) => (
+				{navItems.map(({ collectionName, icon }, i) => (
 					<ListItem key={i} disablePadding>
 						<ListItemButton
-							onClick={() =>
-								router.push(`${router.route}?collection=${text}`)
-							}
+							sx={listItemBtnIsSelectedStyle(collectionName)}
+							selected={listItemBtnIsSelected(collectionName)}
+							onClick={() => handleListItemBtnClick(collectionName)}
 						>
-							<ListItemIcon>{icon}</ListItemIcon>
+							<ListItemIcon sx={listItemBtnIsSelectedStyle(collectionName)}>
+								{icon}
+							</ListItemIcon>
 							<ListItemText
-								primary={text}
+								primary={collectionName}
 								sx={{ textTransform: 'capitalize' }}
 							/>
 						</ListItemButton>
@@ -60,9 +74,9 @@ const AdminSideNav = ({ heading, navItems }) => {
 			<Button
 				startIcon={<LogoutIcon />}
 				size='large'
-				sx={{ justifyContent: 'start', pl: 2.8 }}
+				sx={{ justifyContent: 'start', pl: 2.8, py: 2 }}
 				fullWidth
-				onClick={handleLogout}
+				onClick={handleLogoutBtnClick}
 			>
 				Logout
 			</Button>
