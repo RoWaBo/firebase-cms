@@ -41,18 +41,20 @@ const Dashboard = () => {
 				<Grid item xs={3}>
 					<AdminSideNav heading='Collections' navItems={navItems} />
 				</Grid>
-				<Grid item xs={9}>
-					<Box
-						component='main'
-						sx={{
-							height: '100vh',
-							overflowY: 'scroll',
-						}}
-					>
-						{router.query.collection === navItems[0].collectionName && (
-							<Blogs collectionName={navItems[0].collectionName} />
-						)}
-					</Box>
+				<Grid
+					item
+					xs={9}
+					component='main'
+					sx={{
+						height: '100vh',
+						overflowY: 'scroll',
+						px: '8%',
+						pt: '8vh',
+					}}
+				>
+					{router.query.collection === navItems[0].collectionName && (
+						<Blogs collectionInfo={navItems[0]} />
+					)}
 				</Grid>
 			</Grid>
 		)
