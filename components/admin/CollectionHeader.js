@@ -1,14 +1,11 @@
 import { Add } from '@mui/icons-material'
 import { Box, Typography, Button } from '@mui/material'
 
-const CollectionHeader = ({ collectionName }) => {
+const CollectionHeader = ({ collectionName, onClickBtn }) => {
 	return (
-		<Box
-			component='header'
-			sx={{ display: 'flex', alignItems: 'center', px: '10%', mt: '10vh', mb: 4 }}
-		>
+		<Box component='header' sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
 			<Typography
-				variant='h5'
+				variant='h4'
 				component='h1'
 				sx={{ textTransform: 'capitalize', fontWeight: 500 }}
 			>
@@ -19,6 +16,7 @@ const CollectionHeader = ({ collectionName }) => {
 				variant={'contained'}
 				size={'medium'}
 				sx={{ marginLeft: 'auto' }}
+				onClick={onClickBtn}
 			>
 				Add New
 			</Button>
