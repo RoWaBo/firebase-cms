@@ -20,12 +20,6 @@ const Dashboard = () => {
 	const [isLoading, setIsLoading] = useState(true)
 	const router = useRouter()
 
-	useEffect(() => {
-		if (!router.isReady) return
-		console.log(router)
-		console.log(router.query.collection)
-	}, [router.isReady])
-
 	// Page requires login
 	useEffect(() => {
 		if (currentUser) {
