@@ -1,19 +1,10 @@
-import { Backdrop, Box, CircularProgress, Grid, Paper } from '@mui/material'
+import { Backdrop, CircularProgress, Grid, Paper } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../../contexts/AuthContext'
 import { useRouter } from 'next/router'
-import BookIcon from '@mui/icons-material/Book'
-import CodeIcon from '@mui/icons-material/Code'
-import SettingsIcon from '@mui/icons-material/Settings'
 import AdminSideNav from '../../../components/admin/AdminSideNav'
 // COLLECTIONS
-import Blogs from '../../../collections/Blogs'
-
-const navItems = [
-	{ collectionName: 'blogs', icon: <BookIcon /> },
-	{ collectionName: 'code snippets', icon: <CodeIcon /> },
-	{ collectionName: 'settings', icon: <SettingsIcon /> },
-]
+import { collections } from '../../../collectionsConfig'
 
 const Dashboard = () => {
 	const { currentUser } = useAuth()
@@ -33,7 +24,7 @@ const Dashboard = () => {
 		return (
 			<Grid container direction='row'>
 				<Grid item xs={3}>
-					<AdminSideNav heading='Collections' navItems={navItems} />
+					<AdminSideNav heading='Collections' navItems={collections} />
 				</Grid>
 				<Grid
 					item
@@ -46,9 +37,13 @@ const Dashboard = () => {
 						pt: '8vh',
 					}}
 				>
-					{router.query.collection === navItems[0].collectionName && (
-						<Blogs collectionInfo={navItems[0]} />
-					)}
+					{collections.map((collection, i) => (
+						<div key={i}>
+							{router.query.collection === collection.name && (
+								<>{collection.component}</>
+							)}
+						</div>
+					))}
 				</Grid>
 			</Grid>
 		)
