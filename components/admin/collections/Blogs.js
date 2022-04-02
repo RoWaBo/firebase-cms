@@ -1,4 +1,4 @@
-import CollectionHeader from '../components/admin/CollectionHeader'
+import CollectionHeader from '../../admin/CollectionHeader'
 import { useEffect, useState } from 'react'
 import {
 	List,
@@ -13,7 +13,7 @@ import {
 	TextField,
 } from '@mui/material'
 import { Delete } from '@mui/icons-material'
-import useFirestore from '../hooks/useFirestore'
+import useFirestore from '../../../hooks/useFirestore'
 import { useRouter } from 'next/router'
 import { Box } from '@mui/system'
 import { useForm } from 'react-hook-form'
@@ -21,12 +21,13 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Save } from '@mui/icons-material'
+import { blogs as blogsCollection } from '../../../collectionsConfig'
 
 const blogSchema = yup.object({
 	title: yup.string().required(),
 })
 
-const Blogs = ({ collectionInfo }) => {
+const Blogs = () => {
 	const {
 		register,
 		handleSubmit,
@@ -82,7 +83,7 @@ const Blogs = ({ collectionInfo }) => {
 	return (
 		<>
 			<CollectionHeader
-				collectionName={collectionInfo.collectionName}
+				collectionName={blogsCollection.name}
 				onClickAddNew={() => router.push(`${router.asPath}&addNew=true`)}
 				onClickSave={handleSubmit(onSubmit)}
 				isLoading={isLoading}
@@ -129,7 +130,7 @@ const Blogs = ({ collectionInfo }) => {
 						>
 							<ListItemButton sx={{ py: 2 }}>
 								<ListItemAvatar>
-									<Avatar>{collectionInfo.icon}</Avatar>
+									<Avatar>{blogsCollection.icon}</Avatar>
 								</ListItemAvatar>
 								<ListItemText primary={blog.title} />
 							</ListItemButton>
