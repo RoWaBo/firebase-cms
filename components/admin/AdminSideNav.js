@@ -51,18 +51,18 @@ const AdminSideNav = ({ heading, navItems }) => {
 			</Typography>
 			<Divider />
 			<List>
-				{navItems.map(({ collectionName, icon }, i) => (
+				{navItems?.map(({ name, icon }, i) => (
 					<ListItem key={i} disablePadding>
 						<ListItemButton
-							sx={listItemBtnSelectedStyle(collectionName)}
-							selected={listItemBtnIsSelected(collectionName)}
-							onClick={() => handleListItemBtnClick(collectionName)}
+							sx={listItemBtnSelectedStyle(name)}
+							selected={listItemBtnIsSelected(name)}
+							onClick={() => handleListItemBtnClick(name)}
 						>
-							<ListItemIcon sx={listItemBtnSelectedStyle(collectionName)}>
+							<ListItemIcon sx={listItemBtnSelectedStyle(name)}>
 								{icon}
 							</ListItemIcon>
 							<ListItemText
-								primary={collectionName}
+								primary={name}
 								sx={{ textTransform: 'capitalize' }}
 							/>
 						</ListItemButton>
