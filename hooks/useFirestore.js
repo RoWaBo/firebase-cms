@@ -7,6 +7,7 @@ import {
 	collection,
 	query,
 	serverTimestamp,
+	deleteDoc,
 } from 'firebase/firestore'
 import { db } from '../firebaseConfig'
 
@@ -26,7 +27,10 @@ const useFirestore = () => {
 		await setDoc(newDocRef, newDocBody, { merge: true })
 		return ress.id
 	}
-	return { getCollection, addDocWithAutoId }
+	const deleteDocument = async (collectionName, id) => {
+		await deleteDoc(doc(db, collectionName, id))
+	}
+	return { getCollection, addDocWithAutoId, deleteDocument }
 }
 
 export default useFirestore
