@@ -41,7 +41,7 @@ const Blogs = () => {
 	const [isLoading, setIsLoading] = useState(true)
 	const [errorMessage, setErrorMessage] = useState()
 	const router = useRouter()
-	const { getCollection } = useFirestore()
+	const { getCollection, addDocWithAutoId } = useFirestore()
 
 	// Get all blogs
 	useEffect(() => {
@@ -49,7 +49,7 @@ const Blogs = () => {
 		if (blogs) return
 		;(async () => {
 			try {
-				const blogs = await getCollection('blogs')
+				const blogs = await getCollection(blogsCollection.firestoreCollectionName)
 				setBlogs([...blogs])
 				setIsLoading(false)
 			} catch (error) {
@@ -68,9 +68,16 @@ const Blogs = () => {
 
 	const onSubmit = async (form) => {
 		try {
-			// setIsLoading(true)
-			console.log(form)
+			console.log('form: ', form)
+			setIsLoading(true)
+			const ress = await addDocWithAutoId(
+				blogsCollection.firestoreCollectionName,
+				form
+			)
+			console.log('ress: ', ress)
+			setIsLoading(false)
 		} catch (error) {
+			console.error(error)
 			setIsLoading(false)
 			setErrorMessage('Something went wrong')
 		}
