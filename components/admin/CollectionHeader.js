@@ -2,10 +2,21 @@ import { Add } from '@mui/icons-material'
 import { Box, Typography, Button } from '@mui/material'
 import { useRouter } from 'next/router'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Save, Cancel } from '@mui/icons-material'
+import { Save } from '@mui/icons-material'
 
-const CollectionHeader = ({ collectionName, onClickAddNew, onClickSave, isLoading }) => {
+const CollectionHeader = ({
+	collectionName,
+	onClickAddNew,
+	onClickSave,
+	isLoading,
+	useForm,
+}) => {
 	const router = useRouter()
+
+	const handleOnClickCancelBtn = () => {
+		useForm.reset()
+		router.push(`${router.route}?collection=${collectionName}`)
+	}
 	return (
 		<Box component='header' sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
 			<Typography
@@ -33,7 +44,7 @@ const CollectionHeader = ({ collectionName, onClickAddNew, onClickSave, isLoadin
 						size={'medium'}
 						color='error'
 						sx={{ marginLeft: 'auto', py: 0.63 }}
-						onClick={() => router.back()}
+						onClick={handleOnClickCancelBtn}
 					>
 						Cancel
 					</Button>

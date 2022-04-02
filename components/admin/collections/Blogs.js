@@ -33,6 +33,7 @@ const Blogs = () => {
 		handleSubmit,
 		formState: { errors },
 		clearErrors,
+		...useFormProps
 	} = useForm({
 		resolver: yupResolver(blogSchema),
 	})
@@ -87,6 +88,7 @@ const Blogs = () => {
 				onClickAddNew={() => router.push(`${router.asPath}&addNew=true`)}
 				onClickSave={handleSubmit(onSubmit)}
 				isLoading={isLoading}
+				useForm={useFormProps}
 			/>
 			{/* FORM TO ADD NEW BLOG */}
 			{router.query.addNew && (
