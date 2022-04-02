@@ -11,6 +11,7 @@ import {
 	CircularProgress,
 	ListItemButton,
 	TextField,
+	Snackbar,
 } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import useFirestore from '../../../hooks/useFirestore'
@@ -21,7 +22,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Save } from '@mui/icons-material'
-import { blogs as blogsCollection } from '../../../collectionsConfig'
+import { blogs as collectionInfo } from '../../../collectionsConfig'
+import AlertDialog from '../../AlertDialog'
 
 const blogSchema = yup.object({
 	title: yup.string().required(),
@@ -37,20 +39,23 @@ const Blogs = () => {
 	} = useForm({
 		resolver: yupResolver(blogSchema),
 	})
-	const [blogs, setBlogs] = useState()
+	const [collectionItems, setCollectionItems] = useState()
 	const [isLoading, setIsLoading] = useState(true)
 	const [errorMessage, setErrorMessage] = useState()
+	const [successMessage, setSuccessMessage] = useState()
+	const [alertDialogIsVisible, setAlertDialogIsVisible] = useState()
+	const [deletedItemId, setDeletedItemId] = useState()
 	const router = useRouter()
-	const { getCollection, addDocWithAutoId } = useFirestore()
+	const { getCollection, addDocWithAutoId, deleteDocument } = useFirestore()
 
 	// Get all blogs
 	useEffect(() => {
 		setErrorMessage(null)
-		if (blogs) return
+		if (collectionItems) return
 		;(async () => {
 			try {
-				const blogs = await getCollection(blogsCollection.firestoreCollectionName)
-				setBlogs([...blogs])
+				const items = await getCollection(collectionInfo.firestoreCollectionName)
+				setCollectionItems([...items])
 				setIsLoading(false)
 			} catch (error) {
 				console.error(error)
@@ -60,22 +65,19 @@ const Blogs = () => {
 				)
 			}
 		})()
-	}, [blogs])
+	}, [collectionItems])
 
 	useEffect(() => {
 		console.log(router)
 	}, [router])
 
 	const onSubmit = async (form) => {
+		console.log('form: ', form)
 		try {
-			console.log('form: ', form)
 			setIsLoading(true)
-			const ress = await addDocWithAutoId(
-				blogsCollection.firestoreCollectionName,
-				form
-			)
-			console.log('ress: ', ress)
+			await addDocWithAutoId(collectionInfo.firestoreCollectionName, form)
 			setIsLoading(false)
+			setSuccessMessage('Successfully saved')
 		} catch (error) {
 			console.error(error)
 			setIsLoading(false)
@@ -87,18 +89,28 @@ const Blogs = () => {
 		clearErrors()
 		setErrorMessage(null)
 	}
+	const handleDeleteBtnClick = (id) => {
+		setDeletedItemId(id)
+		setAlertDialogIsVisible(true)
+	}
+	const handleAlertDialogDeleteBtnClick = () => {
+		deleteDocument(collectionInfo.firestoreCollectionName, deletedItemId)
+	}
+	const handleAddNewBtnClick = () => {
+		router.push(`${router.asPath}&addNew=true`)
+	}
 
 	return (
 		<>
 			<CollectionHeader
-				collectionName={blogsCollection.name}
-				onClickAddNew={() => router.push(`${router.asPath}&addNew=true`)}
+				collectionName={collectionInfo.name}
+				onClickAddNew={handleAddNewBtnClick}
 				onClickSave={handleSubmit(onSubmit)}
 				isLoading={isLoading}
 				useForm={useFormProps}
 			/>
 			{/* FORM TO ADD NEW BLOG */}
-			{router.query.addNew && (
+			{router.query.addNew && !isLoading && (
 				<Box
 					component='form'
 					// onSubmit={handleSubmit(onSubmit)}
@@ -113,7 +125,7 @@ const Blogs = () => {
 						helperText={errors?.title && errors.title?.message}
 						onChange={handleTextFieldOnChange}
 					/>
-					<LoadingButton
+					{/* <LoadingButton
 						loading={isLoading}
 						onClick={handleSubmit(onSubmit)}
 						variant={'contained'}
@@ -122,32 +134,62 @@ const Blogs = () => {
 						sx={{ justifySelf: 'end', mt: 1 }}
 					>
 						Save
-					</LoadingButton>
+					</LoadingButton> */}
 				</Box>
 			)}
 			{/* LIST OF ALL BLOGS */}
 			{!router.query.addNew && (
 				<List>
-					{blogs?.map((blog, i) => (
+					{collectionItems?.map((item, i) => (
 						<ListItem
-							key={blog.id}
+							key={item.id}
 							secondaryAction={
-								<IconButton edge='end'>{<Delete />}</IconButton>
+								<IconButton
+									edge='end'
+									onClick={() => handleDeleteBtnClick(item.id)}
+								>
+									{<Delete />}
+								</IconButton>
 							}
 							divider
 							disablePadding
 						>
 							<ListItemButton sx={{ py: 2 }}>
 								<ListItemAvatar>
-									<Avatar>{blogsCollection.icon}</Avatar>
+									<Avatar>{collectionInfo.icon}</Avatar>
 								</ListItemAvatar>
-								<ListItemText primary={blog.title} />
+								<ListItemText primary={item.title} />
 							</ListItemButton>
 						</ListItem>
 					))}
 				</List>
 			)}
+			{/* SNACKBAR WITH SUCCESS MESSAGE */}
+			<Snackbar
+				open={successMessage ? true : false}
+				autoHideDuration={4000}
+				onClose={() => setSuccessMessage(null)}
+				anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+			>
+				<Alert
+					severity='success'
+					sx={{ width: '100%', mx: '2vw', mb: '2vh', fontSize: '1rem' }}
+				>
+					{successMessage}
+				</Alert>
+			</Snackbar>
+			{/* ERRORMESSAGE */}
 			{errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
+			{/* DELETE ALERTDIALOG */}
+			{alertDialogIsVisible && (
+				<AlertDialog
+					title='Are you sure you want to delete?'
+					alertDialogIsVisible
+					setAlertDialogIsVisible={setAlertDialogIsVisible}
+					setErrorMessage={setErrorMessage}
+					onDeleteBtnClick={handleAlertDialogDeleteBtnClick}
+				/>
+			)}
 			{isLoading && (
 				<CircularProgress
 					size={60}
