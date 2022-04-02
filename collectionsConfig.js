@@ -7,12 +7,14 @@ export const blogs = {
 	name: 'blogs',
 	icon: <BookIcon />,
 	component: <Blogs />,
+	firestoreCollectionName: 'blogs',
 }
 
 export const codeSnippets = {
 	name: 'code snippets',
 	icon: <CodeIcon />,
 	component: <CodeSnippets />,
+	firestoreCollectionName: 'codeSnippets',
 }
 
 export const collections = [blogs, codeSnippets]
