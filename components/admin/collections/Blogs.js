@@ -26,6 +26,7 @@ import { blogs as collectionInfo } from '../../../collectionsConfig'
 import AlertDialog from '../../AlertDialog'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '../../../firebaseConfig'
+import CollectionItemList from '../CollectionItemList'
 
 const blogSchema = yup.object({
 	title: yup.string().required(),
@@ -45,10 +46,9 @@ const Blogs = () => {
 	const [isLoading, setIsLoading] = useState(true)
 	const [errorMessage, setErrorMessage] = useState()
 	const [successMessage, setSuccessMessage] = useState()
-	const [alertDialogIsVisible, setAlertDialogIsVisible] = useState()
-	const [deletedItemId, setDeletedItemId] = useState()
 	const router = useRouter()
-	const { getCollection, addDocWithAutoId, deleteDocument } = useFirestore()
+	const { addDocWithAutoId } = useFirestore()
+	const collectionRef = collection(db, collectionInfo.firestoreCollectionName)
 
 	// Get all blogs
 	useEffect(() => {
@@ -56,10 +56,6 @@ const Blogs = () => {
 		if (collectionItems) return
 		;(async () => {
 			try {
-				const collectionRef = collection(
-					db,
-					collectionInfo.firestoreCollectionName
-				)
 				const unsub = onSnapshot(collectionRef, (docs) => {
 					const result = []
 					docs.forEach((doc) => {
@@ -101,13 +97,7 @@ const Blogs = () => {
 		clearErrors()
 		setErrorMessage(null)
 	}
-	const handleDeleteBtnClick = (id) => {
-		setDeletedItemId(id)
-		setAlertDialogIsVisible(true)
-	}
-	const handleAlertDialogDeleteBtnClick = () => {
-		deleteDocument(collectionInfo.firestoreCollectionName, deletedItemId)
-	}
+
 	const handleAddNewBtnClick = () => {
 		router.push(`${router.asPath}&addNew=true`)
 	}
@@ -121,6 +111,16 @@ const Blogs = () => {
 				isLoading={isLoading}
 				useForm={useFormProps}
 			/>
+
+			{/* LIST OF ALL BLOGS */}
+			{!router.query.addNew && (
+				<CollectionItemList
+					collectionItems={collectionItems}
+					collectionInfo={collectionInfo}
+					setErrorMessage={setErrorMessage}
+				/>
+			)}
+
 			{/* FORM TO ADD NEW BLOG */}
 			{router.query.addNew && !isLoading && (
 				<Box
@@ -137,45 +137,9 @@ const Blogs = () => {
 						helperText={errors?.title && errors.title?.message}
 						onChange={handleTextFieldOnChange}
 					/>
-					{/* <LoadingButton
-						loading={isLoading}
-						onClick={handleSubmit(onSubmit)}
-						variant={'contained'}
-						size={'medium'}
-						startIcon={<Save />}
-						sx={{ justifySelf: 'end', mt: 1 }}
-					>
-						Save
-					</LoadingButton> */}
 				</Box>
 			)}
-			{/* LIST OF ALL BLOGS */}
-			{!router.query.addNew && (
-				<List>
-					{collectionItems?.map((item, i) => (
-						<ListItem
-							key={item.id}
-							secondaryAction={
-								<IconButton
-									edge='end'
-									onClick={() => handleDeleteBtnClick(item.id)}
-								>
-									{<Delete />}
-								</IconButton>
-							}
-							divider
-							disablePadding
-						>
-							<ListItemButton sx={{ py: 2 }}>
-								<ListItemAvatar>
-									<Avatar>{collectionInfo.icon}</Avatar>
-								</ListItemAvatar>
-								<ListItemText primary={item.title} />
-							</ListItemButton>
-						</ListItem>
-					))}
-				</List>
-			)}
+
 			{/* SNACKBAR WITH SUCCESS MESSAGE */}
 			<Snackbar
 				open={successMessage ? true : false}
@@ -190,18 +154,11 @@ const Blogs = () => {
 					{successMessage}
 				</Alert>
 			</Snackbar>
+
 			{/* ERRORMESSAGE */}
 			{errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
-			{/* DELETE ALERTDIALOG */}
-			{alertDialogIsVisible && (
-				<AlertDialog
-					title='Are you sure you want to delete?'
-					alertDialogIsVisible
-					setAlertDialogIsVisible={setAlertDialogIsVisible}
-					setErrorMessage={setErrorMessage}
-					onDeleteBtnClick={handleAlertDialogDeleteBtnClick}
-				/>
-			)}
+
+			{/* LOADING ANIMATION */}
 			{isLoading && (
 				<CircularProgress
 					size={60}
