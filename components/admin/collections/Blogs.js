@@ -24,6 +24,8 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { Save } from '@mui/icons-material'
 import { blogs as collectionInfo } from '../../../collectionsConfig'
 import AlertDialog from '../../AlertDialog'
+import { collection, onSnapshot } from 'firebase/firestore'
+import { db } from '../../../firebaseConfig'
 
 const blogSchema = yup.object({
 	title: yup.string().required(),
@@ -54,9 +56,19 @@ const Blogs = () => {
 		if (collectionItems) return
 		;(async () => {
 			try {
-				const items = await getCollection(collectionInfo.firestoreCollectionName)
-				setCollectionItems([...items])
+				const collectionRef = collection(
+					db,
+					collectionInfo.firestoreCollectionName
+				)
+				const unsub = onSnapshot(collectionRef, (docs) => {
+					const result = []
+					docs.forEach((doc) => {
+						result.push(doc.data())
+					})
+					setCollectionItems([...result])
+				})
 				setIsLoading(false)
+				return unsub
 			} catch (error) {
 				console.error(error)
 				setIsLoading(false)
@@ -113,7 +125,7 @@ const Blogs = () => {
 			{router.query.addNew && !isLoading && (
 				<Box
 					component='form'
-					// onSubmit={handleSubmit(onSubmit)}
+					onSubmit={(e) => e.preventDefault()}
 					sx={{ display: 'grid', gap: '1.5rem' }}
 				>
 					<TextField
