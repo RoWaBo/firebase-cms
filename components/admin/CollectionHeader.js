@@ -26,7 +26,7 @@ const CollectionHeader = ({
 			>
 				{collectionName}
 			</Typography>
-			{!router.query.addNew && (
+			{!router.query.id && (
 				<Button
 					startIcon={<Add />}
 					variant={'contained'}
@@ -37,7 +37,7 @@ const CollectionHeader = ({
 					Add New
 				</Button>
 			)}
-			{router.query.addNew && (
+			{router.query.id && (
 				<>
 					<Button
 						variant={'outlined'}
