@@ -1,30 +1,14 @@
 import CollectionHeader from '../../admin/CollectionHeader'
 import { useEffect, useState } from 'react'
-import {
-	List,
-	ListItem,
-	IconButton,
-	ListItemAvatar,
-	Avatar,
-	ListItemText,
-	Alert,
-	CircularProgress,
-	ListItemButton,
-	TextField,
-	Snackbar,
-} from '@mui/material'
-import { Delete } from '@mui/icons-material'
+import { Alert, CircularProgress, TextField, Snackbar } from '@mui/material'
 import useFirestore from '../../../hooks/useFirestore'
 import { useRouter } from 'next/router'
 import { Box } from '@mui/system'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import LoadingButton from '@mui/lab/LoadingButton'
-import { Save } from '@mui/icons-material'
-import { blogs as collectionInfo } from '../../../collectionsConfig'
-import AlertDialog from '../../AlertDialog'
-import { collection, onSnapshot } from 'firebase/firestore'
+import { blogs as col } from '../../../collectionsConfig'
+import { collection, onSnapshot, setDoc } from 'firebase/firestore'
 import { db } from '../../../firebaseConfig'
 import CollectionItemList from '../CollectionItemList'
 
@@ -38,25 +22,28 @@ const Blogs = () => {
 		handleSubmit,
 		formState: { errors },
 		clearErrors,
+		setValue,
 		...useFormProps
 	} = useForm({
 		resolver: yupResolver(blogSchema),
 	})
 	const [collectionItems, setCollectionItems] = useState()
-	const [isLoading, setIsLoading] = useState(true)
+	const [isLoading, setIsLoading] = useState()
 	const [errorMessage, setErrorMessage] = useState()
 	const [successMessage, setSuccessMessage] = useState()
 	const router = useRouter()
-	const { addDocWithAutoId } = useFirestore()
-	const collectionRef = collection(db, collectionInfo.firestoreCollectionName)
+	const { addDocWithAutoId, getDocument, updateDocument } = useFirestore()
+	const collectionRef = collection(db, col.firestoreCollectionName)
 
 	// Get all blogs
 	useEffect(() => {
 		setErrorMessage(null)
 		if (collectionItems) return
+		let unsub
 		;(async () => {
 			try {
-				const unsub = onSnapshot(collectionRef, (docs) => {
+				setIsLoading(true)
+				unsub = onSnapshot(collectionRef, (docs) => {
 					const result = []
 					docs.forEach((doc) => {
 						result.push(doc.data())
@@ -64,7 +51,6 @@ const Blogs = () => {
 					setCollectionItems([...result])
 				})
 				setIsLoading(false)
-				return unsub
 			} catch (error) {
 				console.error(error)
 				setIsLoading(false)
@@ -73,7 +59,29 @@ const Blogs = () => {
 				)
 			}
 		})()
+		return unsub
 	}, [collectionItems])
+
+	// GET AND ADD DOC DATA TO FORM
+	useEffect(() => {
+		if (router.query.id === 'null' || !router.query.id || !router.isReady) return
+		;(async () => {
+			try {
+				setIsLoading(true)
+				const doc = await getDocument(
+					col.firestoreCollectionName,
+					router.query.id
+				)
+				setIsLoading(false)
+				// Update form with doc data
+				setValue('title', doc.title)
+			} catch (error) {
+				console.error(error)
+				setIsLoading(false)
+				setErrorMessage("Item couldn't be loaded... try to refresh the page")
+			}
+		})()
+	}, [router.isReady, router.query.id])
 
 	useEffect(() => {
 		console.log(router)
@@ -83,7 +91,12 @@ const Blogs = () => {
 		console.log('form: ', form)
 		try {
 			setIsLoading(true)
-			await addDocWithAutoId(collectionInfo.firestoreCollectionName, form)
+			if (router.query.id === 'null') {
+				const docId = await addDocWithAutoId(col.firestoreCollectionName, form)
+				router.push(`${router.route}?collection=${col.name}&id=${docId}`)
+			} else {
+				await updateDocument(col.firestoreCollectionName, router.query.id, form)
+			}
 			setIsLoading(false)
 			setSuccessMessage('Successfully saved')
 		} catch (error) {
@@ -99,30 +112,33 @@ const Blogs = () => {
 	}
 
 	const handleAddNewBtnClick = () => {
-		router.push(`${router.asPath}&addNew=true`)
+		router.push(`${router.asPath}&id=null`)
 	}
 
 	return (
 		<>
 			<CollectionHeader
-				collectionName={collectionInfo.name}
+				collectionName={col.name}
 				onClickAddNew={handleAddNewBtnClick}
 				onClickSave={handleSubmit(onSubmit)}
 				isLoading={isLoading}
 				useForm={useFormProps}
 			/>
 
+			{/* ERRORMESSAGE */}
+			{errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
+
 			{/* LIST OF ALL BLOGS */}
-			{!router.query.addNew && (
+			{!router.query.id && (
 				<CollectionItemList
 					collectionItems={collectionItems}
-					collectionInfo={collectionInfo}
+					collectionInfo={col}
 					setErrorMessage={setErrorMessage}
 				/>
 			)}
 
 			{/* FORM TO ADD NEW BLOG */}
-			{router.query.addNew && !isLoading && (
+			{router.query.id && !isLoading && (
 				<Box
 					component='form'
 					onSubmit={(e) => e.preventDefault()}
@@ -155,13 +171,10 @@ const Blogs = () => {
 				</Alert>
 			</Snackbar>
 
-			{/* ERRORMESSAGE */}
-			{errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
-
 			{/* LOADING ANIMATION */}
 			{isLoading && (
 				<CircularProgress
-					size={60}
+					size={50}
 					sx={{ margin: '10vh auto', display: 'block' }}
 				/>
 			)}
