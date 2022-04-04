@@ -128,7 +128,7 @@ const Blogs = () => {
 			{errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
 
 			{/* LIST OF ALL COLLECTION ITEMS */}
-			{!router.query.id && !isLoading && (
+			{!router.query.id && (
 				<CollectionItemList
 					collectionItems={collectionItems}
 					collectionInfo={col}
@@ -171,12 +171,13 @@ const Blogs = () => {
 			</Snackbar>
 
 			{/* LOADING ANIMATION */}
-			{isLoading && (
-				<CircularProgress
-					size={50}
-					sx={{ margin: '10vh auto', display: 'block' }}
-				/>
-			)}
+			{!collectionItems ||
+				(isLoading && (
+					<CircularProgress
+						size={50}
+						sx={{ margin: '10vh auto', display: 'block' }}
+					/>
+				))}
 		</>
 	)
 }
