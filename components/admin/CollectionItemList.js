@@ -15,22 +15,23 @@ import { useRouter } from 'next/router'
 
 const CollectionItemList = ({ collectionItems, collectionInfo, setErrorMessage }) => {
 	const [alertDialogIsVisible, setAlertDialogIsVisible] = useState()
-	const [deletedItemId, setDeletedItemId] = useState()
+	const [deletedItem, setDeletedItem] = useState()
 	const { deleteDocument } = useFirestore()
 	const router = useRouter()
 
-	const handleDeleteBtnClick = (id) => {
-		setDeletedItemId(id)
+	const handleDeleteBtnClick = (title, id) => {
+		setDeletedItem({ title, id })
 		setAlertDialogIsVisible(true)
 	}
 
 	const handleAlertDialogDeleteBtnClick = () => {
-		deleteDocument(collectionInfo.firestoreCollectionName, deletedItemId)
+		deleteDocument(collectionInfo.firestoreCollectionName, deletedItem.id)
 	}
 
 	const handleOnListItemClick = (id) => {
 		router.push(`${router.asPath}&id=${id}`)
 	}
+
 	return (
 		<>
 			<List>
@@ -40,7 +41,7 @@ const CollectionItemList = ({ collectionItems, collectionInfo, setErrorMessage }
 						secondaryAction={
 							<IconButton
 								edge='end'
-								onClick={() => handleDeleteBtnClick(item.id)}
+								onClick={() => handleDeleteBtnClick(item.title, item.id)}
 							>
 								{<Delete />}
 							</IconButton>
@@ -62,7 +63,8 @@ const CollectionItemList = ({ collectionItems, collectionInfo, setErrorMessage }
 			</List>
 			{alertDialogIsVisible && (
 				<AlertDialog
-					title='Are you sure you want to delete?'
+					title='Do you want to delete:'
+					message={`"${deletedItem.title}"`}
 					alertDialogIsVisible
 					setAlertDialogIsVisible={setAlertDialogIsVisible}
 					setErrorMessage={setErrorMessage}
