@@ -8,7 +8,7 @@ const CollectionHeader = ({
 	collectionName,
 	onClickAddNew,
 	onClickSave,
-	isLoading,
+	isSaving,
 	useForm,
 }) => {
 	const router = useRouter()
@@ -33,7 +33,7 @@ const CollectionHeader = ({
 					size={'medium'}
 					sx={{ marginLeft: 'auto' }}
 					onClick={onClickAddNew}
-					disabled={isLoading}
+					disabled={isSaving}
 				>
 					Add New
 				</Button>
@@ -46,18 +46,18 @@ const CollectionHeader = ({
 						color='error'
 						sx={{ marginLeft: 'auto', py: 0.63 }}
 						onClick={handleOnClickCancelBtn}
-						disabled={isLoading}
+						disabled={isSaving}
 					>
 						Cancel
 					</Button>
 					<LoadingButton
-						loading={isLoading}
+						loading={isSaving}
 						onClick={onClickSave}
 						variant={'contained'}
 						size={'medium'}
 						startIcon={<Save />}
 						sx={{ ml: 2 }}
-						disabled={isLoading}
+						disabled={isSaving}
 					>
 						Save
 					</LoadingButton>
