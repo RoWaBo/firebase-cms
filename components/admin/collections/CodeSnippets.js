@@ -29,6 +29,7 @@ const CodeSnippets = () => {
 	})
 	const [collectionItems, setCollectionItems] = useState()
 	const [isLoading, setIsLoading] = useState()
+	const [isSaving, setIsSaving] = useState()
 	const [errorMessage, setErrorMessage] = useState()
 	const [successMessage, setSuccessMessage] = useState()
 	const router = useRouter()
@@ -82,21 +83,25 @@ const CodeSnippets = () => {
 		})()
 	}, [router.isReady, router.query.id])
 
+	// useEffect(() => {
+	// 	console.log(router)
+	// }, [router])
+
 	const onSubmit = async (form) => {
 		console.log('form: ', form)
 		try {
-			setIsLoading(true)
+			setIsSaving(true)
 			if (router.query.id === 'null') {
 				const docId = await addDocWithAutoId(col.firestoreCollectionName, form)
 				router.push(`${router.route}?collection=${col.name}&id=${docId}`)
 			} else {
 				await updateDocument(col.firestoreCollectionName, router.query.id, form)
 			}
-			setIsLoading(false)
+			setIsSaving(false)
 			setSuccessMessage('Successfully saved')
 		} catch (error) {
 			console.error(error)
-			setIsLoading(false)
+			setIsSaving(false)
 			setErrorMessage('Something went wrong')
 		}
 	}
@@ -116,7 +121,7 @@ const CodeSnippets = () => {
 				collectionName={col.name}
 				onClickAddNew={handleAddNewBtnClick}
 				onClickSave={handleSubmit(onSubmit)}
-				isLoading={isLoading}
+				isSaving={isSaving}
 				useForm={useFormProps}
 			/>
 
@@ -147,6 +152,7 @@ const CodeSnippets = () => {
 						error={errors?.title ? true : false}
 						helperText={errors?.title && errors.title?.message}
 						onChange={handleTextFieldOnChange}
+						disabled={isSaving}
 					/>
 				</Box>
 			)}
@@ -167,7 +173,7 @@ const CodeSnippets = () => {
 			</Snackbar>
 
 			{/* LOADING ANIMATION */}
-			{isLoading && (
+			{(!collectionItems || isLoading) && (
 				<CircularProgress
 					size={50}
 					sx={{ margin: '10vh auto', display: 'block' }}

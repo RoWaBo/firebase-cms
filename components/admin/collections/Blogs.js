@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { blogs as col } from '../../../collectionsConfig'
-import { collection, onSnapshot, setDoc } from 'firebase/firestore'
+import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '../../../firebaseConfig'
 import CollectionItemList from '../CollectionItemList'
 
@@ -173,13 +173,12 @@ const Blogs = () => {
 			</Snackbar>
 
 			{/* LOADING ANIMATION */}
-			{!collectionItems ||
-				(isLoading && (
-					<CircularProgress
-						size={50}
-						sx={{ margin: '10vh auto', display: 'block' }}
-					/>
-				))}
+			{(isLoading || !collectionItems) && (
+				<CircularProgress
+					size={50}
+					sx={{ margin: '10vh auto', display: 'block' }}
+				/>
+			)}
 		</>
 	)
 }
