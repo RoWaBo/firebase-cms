@@ -11,11 +11,13 @@ import { Delete } from '@mui/icons-material'
 import AlertDialog from '../AlertDialog'
 import { useState } from 'react'
 import useFirestore from '../../hooks/useFirestore'
+import { useRouter } from 'next/router'
 
 const CollectionItemList = ({ collectionItems, collectionInfo, setErrorMessage }) => {
 	const [alertDialogIsVisible, setAlertDialogIsVisible] = useState()
 	const [deletedItemId, setDeletedItemId] = useState()
 	const { deleteDocument } = useFirestore()
+	const router = useRouter()
 
 	const handleDeleteBtnClick = (id) => {
 		setDeletedItemId(id)
@@ -24,6 +26,10 @@ const CollectionItemList = ({ collectionItems, collectionInfo, setErrorMessage }
 
 	const handleAlertDialogDeleteBtnClick = () => {
 		deleteDocument(collectionInfo.firestoreCollectionName, deletedItemId)
+	}
+
+	const handleOnListItemClick = (id) => {
+		router.push(`${router.asPath}&id=${id}`)
 	}
 	return (
 		<>
@@ -42,7 +48,10 @@ const CollectionItemList = ({ collectionItems, collectionInfo, setErrorMessage }
 						divider
 						disablePadding
 					>
-						<ListItemButton sx={{ py: 2 }}>
+						<ListItemButton
+							sx={{ py: 2 }}
+							onClick={() => handleOnListItemClick(item.id)}
+						>
 							<ListItemAvatar>
 								<Avatar>{collectionInfo.icon}</Avatar>
 							</ListItemAvatar>
