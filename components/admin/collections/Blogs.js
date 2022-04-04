@@ -35,10 +35,9 @@ const Blogs = () => {
 	const { addDocWithAutoId, getDocument, updateDocument } = useFirestore()
 	const collectionRef = collection(db, col.firestoreCollectionName)
 
-	// Get all blogs
+	// Get all collection items
 	useEffect(() => {
 		setErrorMessage(null)
-		if (collectionItems) return
 		let unsub
 		;(async () => {
 			try {
@@ -60,7 +59,7 @@ const Blogs = () => {
 			}
 		})()
 		return unsub
-	}, [collectionItems])
+	}, [])
 
 	// GET AND ADD DOC DATA TO FORM
 	useEffect(() => {
@@ -83,9 +82,9 @@ const Blogs = () => {
 		})()
 	}, [router.isReady, router.query.id])
 
-	useEffect(() => {
-		console.log(router)
-	}, [router])
+	// useEffect(() => {
+	// 	console.log(router)
+	// }, [router])
 
 	const onSubmit = async (form) => {
 		console.log('form: ', form)
@@ -128,8 +127,8 @@ const Blogs = () => {
 			{/* ERRORMESSAGE */}
 			{errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
 
-			{/* LIST OF ALL BLOGS */}
-			{!router.query.id && (
+			{/* LIST OF ALL COLLECTION ITEMS */}
+			{!router.query.id && !isLoading && (
 				<CollectionItemList
 					collectionItems={collectionItems}
 					collectionInfo={col}
@@ -137,7 +136,7 @@ const Blogs = () => {
 				/>
 			)}
 
-			{/* FORM TO ADD NEW BLOG */}
+			{/* FORM TO ADD NEW ITEM DATA */}
 			{router.query.id && !isLoading && (
 				<Box
 					component='form'
