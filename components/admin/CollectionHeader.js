@@ -33,6 +33,7 @@ const CollectionHeader = ({
 					size={'medium'}
 					sx={{ marginLeft: 'auto' }}
 					onClick={onClickAddNew}
+					disabled={isLoading}
 				>
 					Add New
 				</Button>
@@ -45,6 +46,7 @@ const CollectionHeader = ({
 						color='error'
 						sx={{ marginLeft: 'auto', py: 0.63 }}
 						onClick={handleOnClickCancelBtn}
+						disabled={isLoading}
 					>
 						Cancel
 					</Button>
@@ -55,6 +57,7 @@ const CollectionHeader = ({
 						size={'medium'}
 						startIcon={<Save />}
 						sx={{ ml: 2 }}
+						disabled={isLoading}
 					>
 						Save
 					</LoadingButton>
