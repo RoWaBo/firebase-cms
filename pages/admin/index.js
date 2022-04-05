@@ -76,6 +76,7 @@ const Admin = () => {
 						error={errors?.email ? true : false}
 						helperText={errors?.email && errors.email?.message}
 						onChange={handleOnChange}
+						disabled={isLoading}
 					/>
 
 					<TextField
@@ -87,6 +88,7 @@ const Admin = () => {
 						error={errors?.password ? true : false}
 						helperText={errors?.password && errors.password?.message}
 						onChange={handleOnChange}
+						disabled={isLoading}
 					/>
 					{errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
 					<LoadingButton
