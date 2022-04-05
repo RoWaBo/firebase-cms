@@ -11,6 +11,7 @@ import { blogs as col } from '../../../collectionsConfig'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '../../../firebaseConfig'
 import CollectionItemList from '../CollectionItemList'
+import MyRichTextEditor from '../MyRichTextEditor'
 
 const blogSchema = yup.object({
 	title: yup.string().required(),
@@ -32,6 +33,7 @@ const Blogs = () => {
 	const [isSaving, setIsSaving] = useState()
 	const [errorMessage, setErrorMessage] = useState()
 	const [successMessage, setSuccessMessage] = useState()
+	const [editorContent, setEditorContent] = useState()
 	const router = useRouter()
 	const { addDocWithAutoId, getDocument, updateDocument } = useFirestore()
 	const collectionRef = collection(db, col.firestoreCollectionName)
@@ -153,6 +155,10 @@ const Blogs = () => {
 						helperText={errors?.title && errors.title?.message}
 						onChange={handleTextFieldOnChange}
 						disabled={isSaving}
+					/>
+					<MyRichTextEditor
+						editorContent={editorContent}
+						setEditorContent={setEditorContent}
 					/>
 				</Box>
 			)}
