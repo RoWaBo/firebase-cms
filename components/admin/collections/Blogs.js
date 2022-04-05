@@ -8,8 +8,6 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { blogs as col } from '../../../collectionsConfig'
-import { collection, onSnapshot } from 'firebase/firestore'
-import { db } from '../../../firebaseConfig'
 import CollectionItemList from '../CollectionItemList'
 import MyRichTextEditor from '../MyRichTextEditor'
 
@@ -28,7 +26,6 @@ const Blogs = () => {
 	} = useForm({
 		resolver: yupResolver(blogSchema),
 	})
-	const [collectionItems, setCollectionItems] = useState()
 	const [isLoading, setIsLoading] = useState()
 	const [isSaving, setIsSaving] = useState()
 	const [errorMessage, setErrorMessage] = useState()
@@ -36,33 +33,6 @@ const Blogs = () => {
 	const [editorContent, setEditorContent] = useState()
 	const router = useRouter()
 	const { addDocWithAutoId, getDocument, updateDocument } = useFirestore()
-	const collectionRef = collection(db, col.firestoreCollectionName)
-
-	// Get all collection items
-	useEffect(() => {
-		setErrorMessage(null)
-		let unsub
-		;(async () => {
-			try {
-				setIsLoading(true)
-				unsub = onSnapshot(collectionRef, (docs) => {
-					const result = []
-					docs.forEach((doc) => {
-						result.push(doc.data())
-					})
-					setCollectionItems([...result])
-				})
-				setIsLoading(false)
-			} catch (error) {
-				console.error(error)
-				setIsLoading(false)
-				setErrorMessage(
-					"Collection couldn't be loaded... try to refresh the page"
-				)
-			}
-		})()
-		return unsub
-	}, [])
 
 	// GET AND ADD DOC DATA TO FORM
 	useEffect(() => {
@@ -84,10 +54,6 @@ const Blogs = () => {
 			}
 		})()
 	}, [router.isReady, router.query.id])
-
-	// useEffect(() => {
-	// 	console.log(router)
-	// }, [router])
 
 	const onSubmit = async (form) => {
 		console.log('form: ', form)
@@ -133,7 +99,6 @@ const Blogs = () => {
 			{/* LIST OF ALL COLLECTION ITEMS */}
 			{!router.query.id && (
 				<CollectionItemList
-					collectionItems={collectionItems}
 					collectionInfo={col}
 					setErrorMessage={setErrorMessage}
 				/>
@@ -179,7 +144,7 @@ const Blogs = () => {
 			</Snackbar>
 
 			{/* LOADING ANIMATION */}
-			{(isLoading || !collectionItems) && (
+			{isLoading && (
 				<CircularProgress
 					size={50}
 					sx={{ margin: '10vh auto', display: 'block' }}

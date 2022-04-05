@@ -6,18 +6,46 @@ import {
 	Avatar,
 	ListItemText,
 	ListItemButton,
+	CircularProgress,
 } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import AlertDialog from '../AlertDialog'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import useFirestore from '../../hooks/useFirestore'
 import { useRouter } from 'next/router'
+import { collection, onSnapshot } from 'firebase/firestore'
+import { db } from '../../firebaseConfig'
 
-const CollectionItemList = ({ collectionItems, collectionInfo, setErrorMessage }) => {
+const CollectionItemList = ({ collectionInfo, setErrorMessage }) => {
+	const [collectionItems, setCollectionItems] = useState()
 	const [alertDialogIsVisible, setAlertDialogIsVisible] = useState()
 	const [deletedItem, setDeletedItem] = useState()
 	const { deleteDocument } = useFirestore()
 	const router = useRouter()
+	const collectionRef = collection(db, collectionInfo.firestoreCollectionName)
+
+	// Get all collection items
+	useEffect(() => {
+		setErrorMessage(null)
+		let unsub
+		;(async () => {
+			try {
+				unsub = onSnapshot(collectionRef, (docs) => {
+					const result = []
+					docs.forEach((doc) => {
+						result.push(doc.data())
+					})
+					setCollectionItems([...result])
+				})
+			} catch (error) {
+				console.error(error)
+				setErrorMessage(
+					"Collection couldn't be loaded... try to refresh the page"
+				)
+			}
+		})()
+		return unsub
+	}, [])
 
 	const handleDeleteBtnClick = (title, id) => {
 		setDeletedItem({ title, id })
@@ -69,6 +97,13 @@ const CollectionItemList = ({ collectionItems, collectionInfo, setErrorMessage }
 					setAlertDialogIsVisible={setAlertDialogIsVisible}
 					setErrorMessage={setErrorMessage}
 					onDeleteBtnClick={handleAlertDialogDeleteBtnClick}
+				/>
+			)}
+			{/* LOADING ANIMATION */}
+			{!collectionItems && (
+				<CircularProgress
+					size={50}
+					sx={{ margin: '10vh auto', display: 'block' }}
 				/>
 			)}
 		</>

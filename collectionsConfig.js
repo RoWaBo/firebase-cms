@@ -1,7 +1,6 @@
 import Blogs from './components/admin/collections/Blogs'
 import BookIcon from '@mui/icons-material/Book'
 import CodeIcon from '@mui/icons-material/Code'
-import CodeSnippets from './components/admin/collections/CodeSnippets'
 
 export const blogs = {
 	name: 'blogs',
@@ -10,11 +9,4 @@ export const blogs = {
 	firestoreCollectionName: 'blogs',
 }
 
-export const codeSnippets = {
-	name: 'code snippets',
-	icon: <CodeIcon />,
-	component: <CodeSnippets />,
-	firestoreCollectionName: 'codeSnippets',
-}
-
-export const collections = [blogs, codeSnippets]
+export const collections = [blogs]
