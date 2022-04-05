@@ -1,7 +1,7 @@
-import { RichTextEditor } from '@mantine/rte'
+import RichTextEditor from './RichText'
 
-const MyRichTextEditor = ({ editorContent, setEditorContent }) => {
-	return <RichTextEditor value={editorContent} onChange={setEditorContent} />
+const MyRichTextEditor = () => {
+	return <RichTextEditor />
 }
 
 export default MyRichTextEditor
