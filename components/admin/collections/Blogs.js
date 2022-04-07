@@ -1,6 +1,6 @@
 import CollectionHeader from '../../admin/CollectionHeader'
 import { useEffect, useState } from 'react'
-import { Alert, CircularProgress, TextField, Snackbar } from '@mui/material'
+import { Alert, CircularProgress, TextField, Snackbar, Button } from '@mui/material'
 import useFirestore from '../../../hooks/useFirestore'
 import { useRouter } from 'next/router'
 import { Box } from '@mui/system'
@@ -22,7 +22,7 @@ const Blogs = () => {
 		formState: { errors },
 		clearErrors,
 		setValue,
-		...useFormProps
+		reset,
 	} = useForm({
 		resolver: yupResolver(blogSchema),
 	})
@@ -33,6 +33,12 @@ const Blogs = () => {
 	const [editorContent, setEditorContent] = useState()
 	const router = useRouter()
 	const { addDocWithAutoId, getDocument, updateDocument } = useFirestore()
+
+	// reset collection item content on id change
+	useEffect(() => {
+		reset()
+		setEditorContent(null)
+	}, [router.query.id])
 
 	// GET AND ADD DOC DATA TO FORM
 	useEffect(() => {
@@ -47,6 +53,7 @@ const Blogs = () => {
 				setIsLoading(false)
 				// Update form with doc data
 				setValue('title', doc.title)
+				setEditorContent(doc.richTextEditor)
 			} catch (error) {
 				console.error(error)
 				setIsLoading(false)
@@ -56,14 +63,25 @@ const Blogs = () => {
 	}, [router.isReady, router.query.id])
 
 	const onSubmit = async (form) => {
-		console.log('form: ', form)
+		const formData = {
+			...form,
+			richTextEditor: editorContent,
+		}
+		console.log('form: ', formData)
 		try {
 			setIsSaving(true)
 			if (router.query.id === 'null') {
-				const docId = await addDocWithAutoId(col.firestoreCollectionName, form)
+				const docId = await addDocWithAutoId(
+					col.firestoreCollectionName,
+					formData
+				)
 				router.push(`${router.route}?collection=${col.name}&id=${docId}`)
 			} else {
-				await updateDocument(col.firestoreCollectionName, router.query.id, form)
+				await updateDocument(
+					col.firestoreCollectionName,
+					router.query.id,
+					formData
+				)
 			}
 			setIsSaving(false)
 			setSuccessMessage('Successfully saved')
@@ -83,6 +101,13 @@ const Blogs = () => {
 		router.push(`${router.asPath}&id=null`)
 	}
 
+	const logEditor = () => {
+		console.log('default: ', editorContent)
+		// const changeHtmlTags = editorContent
+
+		// console.log('edited: ', changeHtmlTags)
+	}
+
 	return (
 		<>
 			<CollectionHeader
@@ -90,7 +115,6 @@ const Blogs = () => {
 				onClickAddNew={handleAddNewBtnClick}
 				onClickSave={handleSubmit(onSubmit)}
 				isSaving={isSaving}
-				useForm={useFormProps}
 			/>
 
 			{/* ERRORMESSAGE */}
@@ -106,26 +130,47 @@ const Blogs = () => {
 
 			{/* FORM TO ADD NEW ITEM DATA */}
 			{router.query.id && !isLoading && (
-				<Box
-					component='form'
-					onSubmit={(e) => e.preventDefault()}
-					sx={{ display: 'grid', gap: '1.5rem' }}
-				>
-					<TextField
-						label='Title *'
-						variant='standard'
-						fullWidth
-						{...register('title')}
-						error={errors?.title ? true : false}
-						helperText={errors?.title && errors.title?.message}
-						onChange={handleTextFieldOnChange}
+				<>
+					<Box
+						component='form'
+						onSubmit={(e) => e.preventDefault()}
+						sx={{ height: '100%' }}
+					>
+						<TextField
+							label='Title *'
+							variant='standard'
+							fullWidth
+							{...register('title')}
+							error={errors?.title ? true : false}
+							helperText={errors?.title && errors.title?.message}
+							onChange={handleTextFieldOnChange}
+							disabled={isSaving}
+							sx={{ mb: 3 }}
+						/>
+						<MyRichTextEditor
+							editorContent={editorContent}
+							setEditorContent={setEditorContent}
+						/>
+					</Box>
+					<Button
+						variant={'outlined'}
+						size={'small'}
+						sx={{ mt: 2, mr: 2 }}
+						onClick={() => setEditorContent(null)}
 						disabled={isSaving}
-					/>
-					<MyRichTextEditor
-						editorContent={editorContent}
-						setEditorContent={setEditorContent}
-					/>
-				</Box>
+					>
+						reset
+					</Button>
+					<Button
+						variant={'contained'}
+						size={'small'}
+						sx={{ mt: 2 }}
+						onClick={logEditor}
+						disabled={isSaving}
+					>
+						log editor
+					</Button>
+				</>
 			)}
 
 			{/* SNACKBAR WITH SUCCESS MESSAGE */}
