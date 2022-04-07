@@ -4,17 +4,10 @@ import { useRouter } from 'next/router'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Save } from '@mui/icons-material'
 
-const CollectionHeader = ({
-	collectionName,
-	onClickAddNew,
-	onClickSave,
-	isSaving,
-	useForm,
-}) => {
+const CollectionHeader = ({ collectionName, onClickAddNew, onClickSave, isSaving }) => {
 	const router = useRouter()
 
 	const handleOnClickCancelBtn = () => {
-		useForm.reset()
 		router.push(`${router.route}?collection=${collectionName}`)
 	}
 	return (
