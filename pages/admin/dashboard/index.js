@@ -1,4 +1,4 @@
-import { Backdrop, CircularProgress, Grid, Paper } from '@mui/material'
+import { Backdrop, CircularProgress, Grid, Paper, Box } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../../contexts/AuthContext'
 import { useRouter } from 'next/router'
@@ -39,11 +39,11 @@ const Dashboard = () => {
 					}}
 				>
 					{collections.map((collection, i) => (
-						<div key={i}>
+						<Box key={i} sx={{ height: '100%' }}>
 							{router.query.collection === collection.name && (
 								<>{collection.component}</>
 							)}
-						</div>
+						</Box>
 					))}
 				</Grid>
 			</Grid>

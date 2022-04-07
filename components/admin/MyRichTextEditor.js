@@ -13,8 +13,8 @@ const MyRichTextEditor = ({ editorContent, setEditorContent }) => {
 			value={editorContent}
 			onChange={setEditorContent}
 			controls={controlsConfig}
+			style={{ height: '71%' }}
 		/>
 	)
 }
-
 export default MyRichTextEditor
