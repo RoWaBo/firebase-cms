@@ -23,13 +23,13 @@ const Dashboard = () => {
 	if (!isLoading)
 		return (
 			<Grid container direction='row'>
-				<Grid item xs={4} sm={2}>
+				<Grid item xs={4} sm={2.5}>
 					<AdminSideNav heading='Collections' navItems={collections} />
 				</Grid>
 				<Grid
 					item
 					xs={8}
-					sm={10}
+					sm={9.5}
 					component='main'
 					sx={{
 						height: '100vh',
