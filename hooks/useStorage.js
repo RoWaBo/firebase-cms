@@ -2,13 +2,10 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { storage } from '../firebaseConfig'
 
 const useStorage = () => {
-	const uploadeImage = async (collectionName, docId, picture) => {
-		const profilePictureRef = ref(
-			storage,
-			`${collectionName}/${docId}/${picture.name}`
-		)
-		await uploadBytes(profilePictureRef, picture)
-		return getDownloadURL(profilePictureRef)
+	const uploadeImage = async (collectionName, image) => {
+		const imageRef = ref(storage, `${collectionName}/${image.name}`)
+		await uploadBytes(imageRef, image)
+		return getDownloadURL(imageRef)
 	}
 
 	return {

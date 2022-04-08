@@ -10,6 +10,7 @@ import * as yup from 'yup'
 import { blogs as col } from '../../../collectionsConfig'
 import CollectionItemList from '../CollectionItemList'
 import MyRichTextEditor from '../MyRichTextEditor'
+import useStorage from '../../../hooks/useStorage'
 
 const blogSchema = yup.object({
 	title: yup.string().required(),
@@ -33,6 +34,7 @@ const Blogs = () => {
 	const [editorContent, setEditorContent] = useState()
 	const router = useRouter()
 	const { addDocWithAutoId, getDocument, updateDocument } = useFirestore()
+	const { uploadeImage } = useStorage()
 
 	// reset collection item content on id change
 	useEffect(() => {
@@ -102,10 +104,16 @@ const Blogs = () => {
 	}
 
 	const logEditor = () => {
-		console.log('default: ', editorContent)
-		// const changeHtmlTags = editorContent
+		console.log('EditorContent: ', editorContent)
+	}
 
-		// console.log('edited: ', changeHtmlTags)
+	const handleImageUploade = async (image) => {
+		try {
+			const imageUrl = await uploadeImage(col.firestoreCollectionName, image)
+			return imageUrl
+		} catch (error) {
+			console.error(error)
+		}
 	}
 
 	return (
@@ -150,6 +158,7 @@ const Blogs = () => {
 						<MyRichTextEditor
 							editorContent={editorContent}
 							setEditorContent={setEditorContent}
+							handleImageUploade={handleImageUploade}
 						/>
 					</Box>
 					<Button
