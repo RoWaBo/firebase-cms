@@ -1,4 +1,4 @@
-import { Box, Paper, TextField, Typography, Alert } from '@mui/material'
+import { Box, Paper, TextField, Typography, Alert, Button } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -7,7 +7,7 @@ import CenterContainer from '../../components/CenterContainer'
 import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useRouter } from 'next/router'
-import LoginAsGuest from '../../components/admin/LoginAsGuest'
+import DividerWithChip from '../../components/DividerWithChip'
 
 const loginSchema = yup.object({
 	email: yup.string().email().required(),
@@ -48,6 +48,19 @@ const Admin = () => {
 		try {
 			setIsLoading(true)
 			await login(form.email, form.password)
+			router.push('admin/dashboard')
+		} catch (error) {
+			setIsLoading(false)
+			setErrorMessage(firebaseAuthErrorMessages(error.code))
+		}
+	}
+
+	const handleLoginAsGuest = async () => {
+		try {
+			setIsLoading(true)
+			const guestEmail = process.env.NEXT_PUBLIC_GUEST_EMAIL
+			const guestPassword = process.env.NEXT_PUBLIC_GUEST_PASSWORD
+			await login(guestEmail, guestPassword)
 			router.push('admin/dashboard')
 		} catch (error) {
 			setIsLoading(false)
@@ -102,7 +115,15 @@ const Admin = () => {
 						Login
 					</LoadingButton>
 				</Box>
-				<LoginAsGuest />
+				<DividerWithChip text='OR' mt={4} mb={2} />
+				<Button
+					disabled={isLoading}
+					onClick={handleLoginAsGuest}
+					size={'large'}
+					fullWidth
+				>
+					Login as guest
+				</Button>
 			</Paper>
 		</CenterContainer>
 	)
