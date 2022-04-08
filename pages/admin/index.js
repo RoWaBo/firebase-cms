@@ -7,6 +7,7 @@ import CenterContainer from '../../components/CenterContainer'
 import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useRouter } from 'next/router'
+import LoginAsGuest from '../../components/admin/LoginAsGuest'
 
 const loginSchema = yup.object({
 	email: yup.string().email().required(),
@@ -101,6 +102,7 @@ const Admin = () => {
 						Login
 					</LoadingButton>
 				</Box>
+				<LoginAsGuest />
 			</Paper>
 		</CenterContainer>
 	)
