@@ -94,11 +94,6 @@ const Blogs = () => {
 		}
 	}
 
-	const handleTextFieldOnChange = () => {
-		clearErrors()
-		setErrorMessage(null)
-	}
-
 	const handleAddNewBtnClick = () => {
 		router.push(`${router.asPath}&id=null`)
 	}
@@ -151,7 +146,6 @@ const Blogs = () => {
 							{...register('title')}
 							error={errors?.title ? true : false}
 							helperText={errors?.title && errors.title?.message}
-							onChange={handleTextFieldOnChange}
 							disabled={isSaving}
 							sx={{ mb: 3 }}
 						/>
