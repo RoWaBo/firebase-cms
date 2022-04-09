@@ -19,7 +19,6 @@ const Admin = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-		clearErrors,
 	} = useForm({
 		resolver: yupResolver(loginSchema),
 	})

@@ -21,7 +21,6 @@ const Blogs = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-		clearErrors,
 		setValue,
 		reset,
 	} = useForm({
@@ -53,6 +52,7 @@ const Blogs = () => {
 					router.query.id
 				)
 				setIsLoading(false)
+
 				// Update form with doc data
 				setValue('title', doc.title)
 				setEditorContent(doc.richTextEditor)
@@ -150,6 +150,7 @@ const Blogs = () => {
 							sx={{ mb: 3 }}
 						/>
 						<MyRichTextEditor
+							minHeight='71%'
 							editorContent={editorContent}
 							setEditorContent={setEditorContent}
 							handleImageUploade={handleImageUploade}
