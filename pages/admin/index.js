@@ -28,11 +28,6 @@ const Admin = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const [errorMessage, setErrorMessage] = useState()
 
-	const handleOnChange = () => {
-		clearErrors()
-		setErrorMessage(null)
-	}
-
 	const firebaseAuthErrorMessages = (errorCode) => {
 		switch (errorCode) {
 			case 'auth/user-not-found':
@@ -79,7 +74,7 @@ const Admin = () => {
 				</Typography>
 				<Box
 					component={'form'}
-					// onSubmit={handleSubmit(onSubmit)}
+					onSubmit={handleSubmit(onSubmit)}
 					sx={{ display: 'grid', gap: '1.5rem' }}
 				>
 					<TextField
@@ -89,7 +84,6 @@ const Admin = () => {
 						{...register('email')}
 						error={errors?.email ? true : false}
 						helperText={errors?.email && errors.email?.message}
-						onChange={handleOnChange}
 						disabled={isLoading}
 					/>
 
@@ -101,13 +95,13 @@ const Admin = () => {
 						{...register('password')}
 						error={errors?.password ? true : false}
 						helperText={errors?.password && errors.password?.message}
-						onChange={handleOnChange}
 						disabled={isLoading}
 					/>
 					{errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
 					<LoadingButton
 						loading={isLoading}
-						onClick={handleSubmit(onSubmit)}
+						// onClick={handleSubmit(onSubmit)}
+						type='submit'
 						variant={'contained'}
 						size={'large'}
 						sx={{ justifySelf: 'end', mt: 1 }}

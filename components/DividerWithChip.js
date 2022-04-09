@@ -1,4 +1,4 @@
-import { Box, Button, Chip, Divider } from '@mui/material'
+import { Box, Chip, Divider } from '@mui/material'
 
 const DividerWithChip = ({ text, ...props }) => {
 	return (
