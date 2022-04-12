@@ -11,6 +11,7 @@ import { blogs as col } from '../../../collectionsConfig'
 import CollectionItemList from '../CollectionItemList'
 import MyRichTextEditor from '../MyRichTextEditor'
 import useStorage from '../../../hooks/useStorage'
+import ImageDropzone from '../ImageDropzone'
 
 const blogSchema = yup.object({
 	title: yup.string().required(),
@@ -155,6 +156,7 @@ const Blogs = () => {
 							setEditorContent={setEditorContent}
 							handleImageUploade={handleImageUploade}
 						/>
+						<ImageDropzone />
 					</Box>
 					<Button
 						variant={'outlined'}

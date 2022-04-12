@@ -804,6 +804,13 @@
     "react-popper" "^2.2.5"
     "react-textarea-autosize" "^8.3.2"
 
+"@mantine/dropzone@^4.1.3":
+  "integrity" "sha512-TLMMeXfe/+eZSvWTKJ20+79FH7E6lt2FdKiMVOH30jxIy4g53QOEUkWy8EdLMI5tPNH37uxZJv/NLCWGrsvEaw=="
+  "resolved" "https://registry.npmjs.org/@mantine/dropzone/-/dropzone-4.1.3.tgz"
+  "version" "4.1.3"
+  dependencies:
+    "react-dropzone" "^11.4.2"
+
 "@mantine/hooks@^4.1.2", "@mantine/hooks@4.1.3":
   "integrity" "sha512-sFDdpg8TjopSqFICNEX4OYUAbarAVn35FkRfE6vk4u2ecf8ySHO12XbBn/1zybTOD1dUACT8GJ0KI0WsYgT7Uw=="
   "resolved" "https://registry.npmjs.org/@mantine/hooks/-/hooks-4.1.3.tgz"
@@ -1331,6 +1338,11 @@
   "integrity" "sha1-9wtzXGvKGlycItmCw+Oef+ujva0="
   "resolved" "https://registry.npmjs.org/ast-types-flow/-/ast-types-flow-0.0.7.tgz"
   "version" "0.0.7"
+
+"attr-accept@^2.2.2":
+  "integrity" "sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg=="
+  "resolved" "https://registry.npmjs.org/attr-accept/-/attr-accept-2.2.2.tgz"
+  "version" "2.2.2"
 
 "axe-core@^4.3.5":
   "integrity" "sha512-gd1kmb21kwNuWr6BQz8fv6GNECPBnUasepcoLbekws23NVBLODdsClRZ+bQ8+9Uomf3Sm3+Vwn0oYG9NvwnJCw=="
@@ -1975,6 +1987,13 @@
   "version" "6.0.1"
   dependencies:
     "flat-cache" "^3.0.4"
+
+"file-selector@^0.4.0":
+  "integrity" "sha512-iACCiXeMYOvZqlF1kTiYINzgepRBymz1wwjiuup9u9nayhb6g4fSwiyJ/6adli+EPwrWtpgQAh2PoS7HukEGEg=="
+  "resolved" "https://registry.npmjs.org/file-selector/-/file-selector-0.4.0.tgz"
+  "version" "0.4.0"
+  dependencies:
+    "tslib" "^2.0.3"
 
 "fill-range@^7.0.1":
   "integrity" "sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ=="
@@ -2897,6 +2916,15 @@
     "object-assign" "^4.1.1"
     "scheduler" "^0.20.2"
 
+"react-dropzone@^11.4.2":
+  "integrity" "sha512-zxCMwhfPy1olUEbw3FLNPLhAm/HnaYH5aELIEglRbqabizKAdHs0h+WuyOpmA+v1JXn0++fpQDdNfUagWt5hJQ=="
+  "resolved" "https://registry.npmjs.org/react-dropzone/-/react-dropzone-11.7.1.tgz"
+  "version" "11.7.1"
+  dependencies:
+    "attr-accept" "^2.2.2"
+    "file-selector" "^0.4.0"
+    "prop-types" "^15.8.1"
+
 "react-fast-compare@^3.0.1":
   "integrity" "sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA=="
   "resolved" "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-3.2.0.tgz"
@@ -2958,7 +2986,7 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-"react@^16 || ^17", "react@^16.8 || ^17.0", "react@^16.8.0 || ^17", "react@^16.8.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.x || ^17.x", "react@^17.0.0", "react@^17.0.0 || ^18.0.0", "react@^17.0.2 || ^18.0.0-0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0", "react@0.14 || 15 || 16 || 17 || 18", "react@17.0.2":
+"react@^16 || ^17", "react@^16.8 || ^17.0", "react@^16.8.0 || ^17", "react@^16.8.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.x || ^17.x", "react@^17.0.0", "react@^17.0.0 || ^18.0.0", "react@^17.0.2 || ^18.0.0-0", "react@>= 16.8", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0", "react@0.14 || 15 || 16 || 17 || 18", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
@@ -3278,6 +3306,11 @@
   "integrity" "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg=="
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   "version" "1.14.1"
+
+"tslib@^2.0.3":
+  "integrity" "sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw=="
+  "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.3.1.tgz"
+  "version" "2.3.1"
 
 "tslib@^2.1.0":
   "integrity" "sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw=="
