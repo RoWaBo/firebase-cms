@@ -151,12 +151,12 @@ const Blogs = () => {
 							sx={{ mb: 3 }}
 						/>
 						<MyRichTextEditor
-							minHeight='71%'
+							minHeight='54%'
 							editorContent={editorContent}
 							setEditorContent={setEditorContent}
 							handleImageUploade={handleImageUploade}
 						/>
-						<ImageDropzone />
+						<ImageDropzone margin='1.5rem 0' />
 					</Box>
 					<Button
 						variant={'outlined'}
