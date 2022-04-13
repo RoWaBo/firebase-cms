@@ -46,7 +46,7 @@ const AdminSideNav = ({ heading, navItems }) => {
 				flexDirection: 'column',
 			}}
 		>
-			<Typography variant='h6' component='h2' px={2} py={2}>
+			<Typography variant='h6' component='h2' px={2} py={2} color='text.primary'>
 				{heading}
 			</Typography>
 			<Divider />

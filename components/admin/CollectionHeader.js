@@ -15,7 +15,11 @@ const CollectionHeader = ({ collectionName, onClickAddNew, onClickSave, isSaving
 			<Typography
 				variant='h4'
 				component='h1'
-				sx={{ textTransform: 'capitalize', fontWeight: 500 }}
+				sx={{
+					textTransform: 'capitalize',
+					fontWeight: 500,
+					color: 'text.primary',
+				}}
 			>
 				{collectionName}
 			</Typography>
