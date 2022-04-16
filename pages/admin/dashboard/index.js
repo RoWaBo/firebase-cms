@@ -1,4 +1,4 @@
-import { Backdrop, CircularProgress, Grid, Paper, Box } from '@mui/material'
+import { Backdrop, CircularProgress, Grid, Box } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../../contexts/AuthContext'
 import { useRouter } from 'next/router'
@@ -35,7 +35,7 @@ const Dashboard = () => {
 						height: '100vh',
 						overflowY: 'scroll',
 						px: '6%',
-						pt: '8vh',
+						pt: '6vh',
 					}}
 				>
 					{collections.map((collection, i) => (
