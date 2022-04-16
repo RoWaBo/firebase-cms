@@ -32,6 +32,7 @@ const Blogs = () => {
 	const [errorMessage, setErrorMessage] = useState()
 	const [successMessage, setSuccessMessage] = useState()
 	const [editorContent, setEditorContent] = useState()
+	const [image, setImage] = useState()
 	const router = useRouter()
 	const { addDocWithAutoId, getDocument, updateDocument } = useFirestore()
 	const { uploadeImage } = useStorage()
@@ -60,7 +61,7 @@ const Blogs = () => {
 			} catch (error) {
 				console.error(error)
 				setIsLoading(false)
-				setErrorMessage("Item couldn't be loaded... try to refresh the page")
+				setErrorMessage("Item couldn't be loaded... try to refresh(f5) the page")
 			}
 		})()
 	}, [router.isReady, router.query.id])
@@ -70,7 +71,10 @@ const Blogs = () => {
 			...form,
 			richTextEditor: editorContent,
 		}
-		console.log('form: ', formData)
+		if (image) {
+			const imgUrl = await handleImageUploade()
+			formData.imageUrl = imgUrl
+		}
 		try {
 			setIsSaving(true)
 			if (router.query.id === 'null') {
@@ -103,12 +107,13 @@ const Blogs = () => {
 		console.log('EditorContent: ', editorContent)
 	}
 
-	const handleImageUploade = async (image) => {
+	const handleImageUploade = async () => {
 		try {
 			const imageUrl = await uploadeImage(col.firestoreCollectionName, image)
 			return imageUrl
 		} catch (error) {
-			console.error(error)
+			error.log(error)
+			setErrorMessage('Image failed to upload')
 		}
 	}
 
@@ -142,7 +147,7 @@ const Blogs = () => {
 					>
 						<TextField
 							label='Title *'
-							variant='standard'
+							variant='outlined'
 							fullWidth
 							{...register('title')}
 							error={errors?.title ? true : false}
@@ -151,14 +156,19 @@ const Blogs = () => {
 							sx={{ mb: 3 }}
 						/>
 						<MyRichTextEditor
-							minHeight='54%'
+							minHeight='30%'
 							editorContent={editorContent}
 							setEditorContent={setEditorContent}
 							handleImageUploade={handleImageUploade}
 						/>
-						<ImageDropzone margin='1.5rem 0' />
+						<ImageDropzone
+							margin='24px 0'
+							minHeight='150px'
+							image={image}
+							setImage={setImage}
+						/>
 					</Box>
-					<Button
+					{/* <Button
 						variant={'outlined'}
 						size={'small'}
 						sx={{ mt: 2, mr: 2 }}
@@ -175,7 +185,7 @@ const Blogs = () => {
 						disabled={isSaving}
 					>
 						log editor
-					</Button>
+					</Button> */}
 				</>
 			)}
 
