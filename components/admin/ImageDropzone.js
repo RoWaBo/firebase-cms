@@ -4,12 +4,9 @@ import UploadIcon from '@mui/icons-material/Upload'
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported'
 import { Typography } from '@mui/material'
 import { Box } from '@mui/system'
-import { useState } from 'react'
 import Image from 'next/image'
 
-const ImageDropzone = ({ margin, minHeight, setImage, image }) => {
-	const [isLoading, setIsLoading] = useState()
-
+const ImageDropzone = ({ margin, minHeight, handleOnImageDrop, image }) => {
 	function ImageUploadIcon({ status }) {
 		if (status.accepted) {
 			return <UploadIcon fontSize={'large'} color='primary' />
@@ -34,7 +31,7 @@ const ImageDropzone = ({ margin, minHeight, setImage, image }) => {
 
 	const dropzoneChildren = (status) => (
 		<>
-			{image && (
+			{image?.url && (
 				<Box
 					sx={{
 						position: 'relative',
@@ -71,14 +68,9 @@ const ImageDropzone = ({ margin, minHeight, setImage, image }) => {
 		</>
 	)
 
-	const handleOnDrop = (files) => {
-		const imageURL = URL.createObjectURL(files[0])
-		setImage({ url: imageURL, file: files[0] })
-	}
-
 	return (
 		<Dropzone
-			onDrop={(files) => handleOnDrop(files)}
+			onDrop={(files) => handleOnImageDrop(files)}
 			onReject={(files) => console.log('rejected file', files)}
 			// maxSize={3 * 1024 ** 2}
 			accept={IMAGE_MIME_TYPE}
