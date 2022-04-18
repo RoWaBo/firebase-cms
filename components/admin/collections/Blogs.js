@@ -32,7 +32,8 @@ const Blogs = () => {
 	const [errorMessage, setErrorMessage] = useState()
 	const [successMessage, setSuccessMessage] = useState()
 	const [editorContent, setEditorContent] = useState()
-	const [image, setImage] = useState()
+	const [imageFile, setImageFile] = useState()
+	const [image, setImage] = useState({ url: '', name: '' })
 	const router = useRouter()
 	const { addDocWithAutoId, getDocument, updateDocument } = useFirestore()
 	const { uploadeImage } = useStorage()
@@ -41,6 +42,8 @@ const Blogs = () => {
 	useEffect(() => {
 		reset()
 		setEditorContent(null)
+		setImage(null)
+		setImageFile(null)
 	}, [router.query.id])
 
 	// GET AND ADD DOC DATA TO FORM
@@ -58,6 +61,7 @@ const Blogs = () => {
 				// Update form with doc data
 				setValue('title', doc.title)
 				setEditorContent(doc.richTextEditor)
+				setImage({ url: doc.image?.url, name: doc.image?.name })
 			} catch (error) {
 				console.error(error)
 				setIsLoading(false)
@@ -71,12 +75,15 @@ const Blogs = () => {
 			...form,
 			richTextEditor: editorContent,
 		}
-		if (image) {
-			const imgUrl = await handleImageUploade()
-			formData.imageUrl = imgUrl
-		}
 		try {
 			setIsSaving(true)
+			if (imageFile) {
+				const imgUrl = await handleImageUploade()
+				formData.image = {
+					url: imgUrl,
+					name: imageFile.name,
+				}
+			}
 			if (router.query.id === 'null') {
 				const docId = await addDocWithAutoId(
 					col.firestoreCollectionName,
@@ -103,13 +110,15 @@ const Blogs = () => {
 		router.push(`${router.asPath}&id=null`)
 	}
 
-	const logEditor = () => {
-		console.log('EditorContent: ', editorContent)
+	const handleOnImageDrop = (files) => {
+		const imageURL = URL.createObjectURL(files[0])
+		setImageFile(files[0])
+		setImage({ url: imageURL, name: files[0].name })
 	}
 
 	const handleImageUploade = async () => {
 		try {
-			const imageUrl = await uploadeImage(col.firestoreCollectionName, image)
+			const imageUrl = await uploadeImage(col.firestoreCollectionName, imageFile)
 			return imageUrl
 		} catch (error) {
 			error.log(error)
@@ -164,8 +173,8 @@ const Blogs = () => {
 						<ImageDropzone
 							margin='24px 0'
 							minHeight='150px'
+							handleOnImageDrop={handleOnImageDrop}
 							image={image}
-							setImage={setImage}
 						/>
 					</Box>
 					{/* <Button
