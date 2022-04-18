@@ -7,6 +7,7 @@ const MyRichTextEditor = ({
 	setEditorContent,
 	handleImageUploade,
 	minHeight,
+	isSaving,
 	...props
 }) => {
 	const controlsConfig = [
@@ -54,6 +55,7 @@ const MyRichTextEditor = ({
 			onImageUpload={handleImageUploade}
 			controls={controlsConfig}
 			css={editorStyle}
+			sticky={false}
 		/>
 	)
 }
