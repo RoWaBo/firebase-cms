@@ -6,7 +6,7 @@ import { Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import Image from 'next/image'
 
-const ImageDropzone = ({ margin, minHeight, handleOnImageDrop, image }) => {
+const ImageDropzone = ({ margin, minHeight, handleOnImageDrop, image, isSaving }) => {
 	function ImageUploadIcon({ status }) {
 		if (status.accepted) {
 			return <UploadIcon fontSize={'large'} color='primary' />
@@ -74,7 +74,7 @@ const ImageDropzone = ({ margin, minHeight, handleOnImageDrop, image }) => {
 			onReject={(files) => console.log('rejected file', files)}
 			// maxSize={3 * 1024 ** 2}
 			accept={IMAGE_MIME_TYPE}
-			loading={isLoading}
+			loading={isSaving}
 			style={{
 				margin: margin,
 				display: 'grid',
