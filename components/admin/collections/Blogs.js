@@ -169,32 +169,16 @@ const Blogs = () => {
 							editorContent={editorContent}
 							setEditorContent={setEditorContent}
 							handleImageUploade={handleImageUploade}
+							isSaving={isSaving}
 						/>
 						<ImageDropzone
 							margin='24px 0'
 							minHeight='150px'
 							handleOnImageDrop={handleOnImageDrop}
 							image={image}
+							isSaving={isSaving}
 						/>
 					</Box>
-					{/* <Button
-						variant={'outlined'}
-						size={'small'}
-						sx={{ mt: 2, mr: 2 }}
-						onClick={() => setEditorContent(null)}
-						disabled={isSaving}
-					>
-						reset
-					</Button>
-					<Button
-						variant={'contained'}
-						size={'small'}
-						sx={{ mt: 2 }}
-						onClick={logEditor}
-						disabled={isSaving}
-					>
-						log editor
-					</Button> */}
 				</>
 			)}
 
